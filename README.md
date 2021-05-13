@@ -11,6 +11,11 @@ serialised in a manner that permits them to be loaded as inputs to Inspec.
 
 ## Usage
 
+Ensure that the `TK_HOME` environment variable is set to the directory that
+contains the Test Kitchen config.
+
+## Configuration
+
 The tool expects the following directory structure:
 
 ```none
