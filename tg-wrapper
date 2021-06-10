@@ -22,7 +22,7 @@ if not TK_HOME:
             sys.exit("Too many workspaces found!")
     except FileNotFoundError as e:
         print(
-            "Please set TK_HOME environment variable or run kitchen from a devcontainer",
+            "Please set TK_HOME or run kitchen from a devcontainer",
         )
         sys.exit(e)
 # export TERRAGRUNT_SOURCE_UPDATE=true to track a branch rather than a tag
@@ -38,7 +38,10 @@ def configure_env(env_name):
     Configure environment variables for Terragrunt and update `env_name`.
     """
     if "/" in env_name:
-        os.environ["TG_ENVIRONMENT"], os.environ["TG_WORKING_DIR"] = env_name.split("/")
+        (
+            os.environ["TG_ENVIRONMENT"],
+            os.environ["TG_WORKING_DIR"],
+        ) = env_name.split("/")
         env_name = os.environ["TG_ENVIRONMENT"]
     else:
         os.environ["TG_ENVIRONMENT"] = env_name
@@ -75,14 +78,15 @@ def invoke_terragrunt(command):
             universal_newlines=True,
             bufsize=1,
         )
+        # poll() returns None until process finishes, then gives a return code
         while True:
-            output = invoked_command.stdout.readline()
-            if invoked_command.poll() is not None:
+            return_code = invoked_command.poll()
+            if return_code is not None:
                 break
+            output = invoked_command.stdout.readline()
             if output:
                 print(output.rstrip())
-            rc = invoked_command.poll()
-        return rc
+        return return_code
     except subprocess.CalledProcessError as e:
         sys.exit(e.output)
 
@@ -121,13 +125,15 @@ def tg_output():
                 "run-all",
                 "output",
                 "-json",
-                # terragrunt output-all stupidly interleaves its output by default
+                # terragrunt stupidly interleaves its output by default
                 "--terragrunt-parallelism",
                 "1",
                 "--terragrunt-include-external-dependencies",
             ]
         )
-        with open(os.path.join(tempfile.gettempdir(), "out.json"), "w") as output_json:
+        with open(
+            os.path.join(tempfile.gettempdir(), "out.json"), "w"
+        ) as output_json:
             output_json.write(result)
         # Massage this series of json objects into one dictionary
         merged_json = get_output(
@@ -210,9 +216,12 @@ if __name__ == "__main__":
         with open(f"{TK_HOME}/test/integration/root.yaml") as f:
             valid_config = yaml.safe_load(f)
         # Back it up and copy the test config across
-        shutil.copy(f"{TK_HOME}/config/root.yaml", f"{TK_HOME}/config/root.yaml.bak")
         shutil.copy(
-            f"{TK_HOME}/test/integration/root.yaml", f"{TK_HOME}/config/root.yaml"
+            f"{TK_HOME}/config/root.yaml", f"{TK_HOME}/config/root.yaml.bak"
+        )
+        shutil.copy(
+            f"{TK_HOME}/test/integration/root.yaml",
+            f"{TK_HOME}/config/root.yaml",
         )
         os.environ["GOOGLE_OAUTH_ACCESS_TOKEN"] = get_output(
             ["create-token", "-d", f"{TK_HOME}/config"]
@@ -223,4 +232,6 @@ if __name__ == "__main__":
 
     finally:
         # Always restore backed-up config when finished
-        shutil.copy(f"{TK_HOME}/config/root.yaml.bak", f"{TK_HOME}/config/root.yaml")
+        shutil.copy(
+            f"{TK_HOME}/config/root.yaml.bak", f"{TK_HOME}/config/root.yaml"
+        )

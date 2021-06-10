@@ -1,0 +1,4 @@
+pyyaml
+black
+pre-commit
+detect-secrets
