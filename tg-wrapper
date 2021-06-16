@@ -35,17 +35,12 @@ var_file = os.path.join(tempfile.gettempdir(), "env")
 
 def configure_env(env_name):
     """
-    Configure environment variables for Terragrunt and update `env_name`.
+    Configure the TG_ENVIRONMENT environment variable for Terragrunt.
     """
     if "/" in env_name:
-        (
-            os.environ["TG_ENVIRONMENT"],
-            os.environ["TG_WORKING_DIR"],
-        ) = env_name.split("/")
-        env_name = os.environ["TG_ENVIRONMENT"]
+        os.environ["TG_ENVIRONMENT"] = env_name.split("/")[0]
     else:
         os.environ["TG_ENVIRONMENT"] = env_name
-    return env_name
 
 
 def get_output(command):
@@ -86,7 +81,8 @@ def invoke_terragrunt(command):
             output = invoked_command.stdout.readline()
             if output:
                 print(output.rstrip())
-        return return_code
+        if return_code != 0:
+            sys.exit(invoked_command.stderr.read())
     except subprocess.CalledProcessError as e:
         sys.exit(e.output)
 
@@ -100,7 +96,7 @@ def tg_apply(args):
         sys.exit("No env_name, aborting")
     with open(var_file, "w") as var_writer:
         var_writer.write(env_name)
-    env_name = configure_env(env_name)
+    configure_env(env_name)
     invoke_terragrunt(
         [
             "terragrunt",
@@ -118,7 +114,7 @@ def tg_output():
         env_name = var_reader.read()
         if not env_name:
             sys.exit("No env_name, aborting")
-        env_name = configure_env(env_name)
+        configure_env(env_name)
         result = get_output(
             [
                 "terragrunt",
@@ -152,7 +148,7 @@ def tg_destroy(args):
             env_name = arg.split("-var=env_name=")[1]
     if not env_name:
         sys.exit("No env_name, aborting")
-    env_name = configure_env(env_name)
+    configure_env(env_name)
 
     invoke_terragrunt(
         [
