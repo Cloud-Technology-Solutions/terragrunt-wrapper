@@ -206,11 +206,11 @@ def parse_input(stdin, tf_version):
         invoke_terragrunt(["terraform"] + [command] + args)
 
 
-if __name__ == "__main__":
+def main():
     try:
         # First sanity-check the config file
         with open(f"{TK_HOME}/test/integration/root.yaml") as f:
-            valid_config = yaml.safe_load(f)
+            assert yaml.safe_load(f)
         # Back it up and copy the test config across
         shutil.copy(
             f"{TK_HOME}/config/root.yaml", f"{TK_HOME}/config/root.yaml.bak"
