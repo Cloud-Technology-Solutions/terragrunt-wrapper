@@ -25,3 +25,13 @@ pytest-cov = "^2.12.1"
 
 [tool.black]
 line-length = 80
+
+[tool.coverage.paths]
+source = ["terragrunt_wrapper"]
+
+[tool.coverage.run]
+branch = true
+source = ["terragrunt_wrapper"]
+
+[tool.coverage.report]
+show_missing = true
