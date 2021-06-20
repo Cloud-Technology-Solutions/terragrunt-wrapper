@@ -210,7 +210,7 @@ def main():
     try:
         # First sanity-check the config file
         with open(f"{TK_HOME}/test/integration/root.yaml") as f:
-            assert yaml.safe_load(f)
+            _valid_config = yaml.safe_load(f)
         # Back it up and copy the test config across
         shutil.copy(
             f"{TK_HOME}/config/root.yaml", f"{TK_HOME}/config/root.yaml.bak"
