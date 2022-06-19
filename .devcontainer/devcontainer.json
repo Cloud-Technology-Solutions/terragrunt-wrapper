@@ -1,0 +1,14 @@
+{
+	"name": "terragrunt-wrapper",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"davidanson.vscode-markdownlint",
+		"redhat.vscode-yaml"
+	],
+	"postCreateCommand": "pre-commit install && poetry install",
+	"remoteUser": "vscode"
+}

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "terragrunt-wrapper"
+version = "0.1.0"
+description = "Permits Terragrunt to be used with kitchen-terraform"
+authors = ["chriscunningham-cts <chris.cunningham@cloudsolutions.co.uk>"]
+license = "MIT"
+
+[tool.poetry.scripts]
+terragrunt-wrapper = "terragrunt_wrapper:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+black = "^21.6b0"
+autopep8 = "^1.5.7"
+pytest = "^6.2.4"
+coverage = {extras = ["toml"], version = "^5.5"}
+pytest-cov = "^2.12.1"
+
+[tool.black]
+line-length = 80
+
+[tool.coverage.paths]
+source = ["terragrunt_wrapper"]
+
+[tool.coverage.run]
+branch = true
+source = ["terragrunt_wrapper"]
+
+[tool.coverage.report]
+show_missing = true
