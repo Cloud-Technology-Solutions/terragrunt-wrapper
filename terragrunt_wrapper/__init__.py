@@ -103,7 +103,7 @@ def tg_apply(args):
             "run-all",
             "apply",
             "--terragrunt-working-dir",
-            os.path.join(TK_HOME, "terraform", env_name),
+            os.path.join(TK_HOME, "environments", env_name),
             "--terragrunt-include-external-dependencies",
         ]
     )
@@ -156,7 +156,7 @@ def tg_destroy(args):
             "run-all",
             "destroy",
             "--terragrunt-working-dir",
-            os.path.join(TK_HOME, "terraform", env_name),
+            os.path.join(TK_HOME, "environments", env_name),
             "--terragrunt-include-external-dependencies",
         ]
     )
@@ -213,14 +213,15 @@ def main():
             _valid_config = yaml.safe_load(f)
         # Back it up and copy the test config across
         shutil.copy(
-            f"{TK_HOME}/config/root.yaml", f"{TK_HOME}/config/root.yaml.bak"
+            f"{TK_HOME}/environments/root.yaml",
+            f"{TK_HOME}/environments/root.yaml.bak",
         )
         shutil.copy(
             f"{TK_HOME}/test/integration/root.yaml",
-            f"{TK_HOME}/config/root.yaml",
+            f"{TK_HOME}/environments/root.yaml",
         )
         os.environ["GOOGLE_OAUTH_ACCESS_TOKEN"] = get_output(
-            ["create-token", "-d", f"{TK_HOME}/config"]
+            ["create-token", "-d", f"{TK_HOME}/environments"]
         ).strip()
         parse_input(sys.argv, get_output(["terraform", "-v"]).split("\n")[0])
     except Exception as e:
@@ -229,5 +230,6 @@ def main():
     finally:
         # Always restore backed-up config when finished
         shutil.copy(
-            f"{TK_HOME}/config/root.yaml.bak", f"{TK_HOME}/config/root.yaml"
+            f"{TK_HOME}/environments/root.yaml.bak",
+            f"{TK_HOME}/environments/root.yaml",
         )
