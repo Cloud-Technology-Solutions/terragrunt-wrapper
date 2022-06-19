@@ -220,9 +220,6 @@ def main():
             f"{TK_HOME}/test/integration/root.yaml",
             f"{TK_HOME}/environments/root.yaml",
         )
-        os.environ["GOOGLE_OAUTH_ACCESS_TOKEN"] = get_output(
-            ["create-token", "-d", f"{TK_HOME}/environments"]
-        ).strip()
         parse_input(sys.argv, get_output(["terraform", "-v"]).split("\n")[0])
     except Exception as e:
         sys.exit(e)
