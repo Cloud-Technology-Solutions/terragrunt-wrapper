@@ -1,6 +1,6 @@
 # `terragrunt-wrapper` README
 
-This repo contains a shell script which makes it possible to used Terragrunt
+This repo contains a Python tool which makes it possible to used Terragrunt
 with the [Test Kitchen](kitchen.chef.io) framework more natural. It intercepts
 the calls that the `kitchen-terraform` driver makes to the `terraform` binary
 and instead directs them to `terragrunt` while ensuring that the differences
@@ -8,11 +8,6 @@ between how the two commands are invoked are accounted for.
 
 Inspec testing is fully supported and outputs from Terraform modules are
 serialised in a manner that permits them to be loaded as inputs to Inspec.
-
-## Usage
-
-Ensure that the `TK_HOME` environment variable is set to the directory that
-contains the Test Kitchen config.
 
 ## Configuration
 
@@ -99,6 +94,10 @@ todo
 
 Export `TERRAGRUNT_SOURCE_UPDATE=true` to track a branch rather than a tag.
 
+## Building
+
+The tool uses Poetry to manage its Python configuration.
+
 ## Notes
 
 -   Inter-environment dependencies will be processed as normal: this means that
@@ -121,11 +120,22 @@ Export `TERRAGRUNT_SOURCE_UPDATE=true` to track a branch rather than a tag.
     if Terragrunt runs the same module more than once when building out an
     environment then the resultant output will be invalid YAML. The correct fix
     here would be for Terragrunt to rename outputs according to the environment
-    in some manner itself. For now an imperfect solution of inline Python is
-    used to manually modify `project` resource outputs only. There is no reason
-    that this could not be improved to handle all output objects.
+    in some manner itself. For now an imperfect solution is used to manually
+    modify `project` resource outputs only. There is no reason that this could
+    not be improved to handle all output objects.
 -   The `inspec-gcp` profile is a very thin wrapper around the underlying API
     calls and is missing a lot of possible introspection. For resource types
     that it does not cover or does not expose sufficient attributes for, it is
     recommended to use the `local` profile and just run `gcloud` commands
     directly.
+
+## Releases
+
+Releases are pushed automatically on push to `main` by a GitHub Action.
+
+## TODO
+
+-   Improve docs
+-   Stop hard-coding paths in the code and figure out how to adapt to different
+    naming styles. `TK_HOME` shows how this can be done.
+-   Reconcile the internal version number and the release version.

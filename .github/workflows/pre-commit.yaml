@@ -9,7 +9,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install terraform-docs
         env:
           TERRAFORM_DOCS_VERSION: 0.16.0
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Install markdownlint-cli
         run: sudo npm install -g markdownlint-cli
-      - uses: actions/setup-python@v2
-      - uses: pre-commit/action@v2.0.0
+      - uses: actions/setup-python@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.9"
+      - uses: pre-commit/action@v3.0.0
