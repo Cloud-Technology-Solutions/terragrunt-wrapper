@@ -20,6 +20,6 @@ jobs:
       - name: Install markdownlint-cli
         run: sudo npm install -g markdownlint-cli
       - uses: actions/setup-python@v3
-      - uses: pre-commit/action@v3.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.10"
+      - uses: pre-commit/action@v3.0.0
