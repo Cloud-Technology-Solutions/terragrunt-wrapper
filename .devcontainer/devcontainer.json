@@ -1,5 +1,5 @@
 {
-	"name": "cookiecutter-python-package",
+	"name": "terragrunt-wrapper",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},

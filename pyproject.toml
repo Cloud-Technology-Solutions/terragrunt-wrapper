@@ -3,16 +3,18 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "{{ cookiecutter.project_name }}"
+name = "terragrunt-wrapper"
 version = "0.1.0"
-description = "{{ cookiecutter.description }}"
+description = "Permits Terragrunt to be used with kitchen-terraform"
 authors = ["chriscunningham-cts <chris.cunningham@cloudsolutions.co.uk>"]
-license = "{{ cookiecutter.license }}"
+license = "MIT"
 
 [tool.poetry.scripts]
-"{{ cookiecutter.project_name }}" = "{{ cookiecutter.project_name }}:main"
+terragrunt-wrapper = "terragrunt_wrapper:main"
 
 [tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
@@ -25,11 +27,11 @@ pytest-cov = "^2.12.1"
 line-length = 80
 
 [tool.coverage.paths]
-source = ["{{ cookiecutter.project_name }}"]
+source = ["terragrunt_wrapper"]
 
 [tool.coverage.run]
 branch = true
-source = ["{{ cookiecutter.project_name }}"]
+source = ["terragrunt_wrapper"]
 
 [tool.coverage.report]
 show_missing = true
