@@ -10,12 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install terraform-docs
-        env:
-          TERRAFORM_DOCS_VERSION: 0.16.0
-        run: |
-          curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-$(uname)-amd64.tar.gz | \
-          sudo tar xzf - -C /usr/bin/
       - uses: actions/setup-node@v2
       - name: Install markdownlint-cli
         run: sudo npm install -g markdownlint-cli
